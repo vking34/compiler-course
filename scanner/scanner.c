@@ -50,8 +50,11 @@ void skipComment() {
 
 Token* readBasicChar(TokenType tokenType)
 {
+	int ln, cn;
+	ln = lineNo;
+	cn = colNo;
 	readChar();
-	return makeToken(tokenType, lineNo, colNo);
+	return makeToken(tokenType, ln, cn);
 }
 
 Token* readIdentKeyword(void) {
@@ -63,18 +66,18 @@ Token* readIdentKeyword(void) {
 	token->colNo = colNo;
 	token->tokenType = TK_IDENT;
 
-	while(){
+	while(99){
 		readChar();
+		if(i >= 15){
+				token->tokenType = TK_NONE;
+				error(ERR_IDENTTOOLONG, token->lineNo, token->colNo);
+				return makeToken(TK_NONE, lineNo, colNo);
+		}
 		switch(charCodes[currentChar]){
 			case CHAR_DIGIT:
 			case CHAR_LETTER:
-			token->string[token->value] = currentChar;
+			token->string[i] = currentChar;
 			i++;
-			if(i > 15){
-				token->tokenType = TK_NONE;
-				error(ERR_IDENTTOOLONG, token->lineNo, token->colNo);
-				return token;
-			}
 			break;
 
 			default:
@@ -94,17 +97,17 @@ Token* readNumber(void) {
 	token->colNo = colNo;
 	token->tokenType = TK_NUMBER;
 
-	while(){
+	while(1){
 		readChar();
+		if(i > 9){
+				token->tokenType = TK_NONE;
+				error(ERR_NUMBERTOOLONG, token->lineNo, token->colNo);
+				return token;
+		}
 		switch(charCodes[currentChar]){
 			case CHAR_DIGIT:
 			token->string[token->value] = currentChar;
 			i++;
-			if(i > 9){
-				token->tokenType = TK_NONE;
-				error(ERR_NUMBERTOOLONG, token->lineNo, token->colNo);
-				return token;
-			}
 			break;
 
 			default:
@@ -147,7 +150,7 @@ Token* readPeriod(){
 		return makeToken(SB_RSEL, ln, cn);
 	}
 
-	return makeToken(SB_PERIOD);
+	return makeToken(SB_PERIOD, ln, cn);
 	
 }
 
@@ -213,27 +216,6 @@ Token* readExclaimation(void){
 }
 
 
-Token* readLPAR(void){
-	int ln, cn;
-	ln = lineNo;
-	cn = colNo;
-
-	readChar();
-
-	if(charCodes[currentChar] != CHAR_PERIOD){
-		readChar();
-		return makeToken(SB_LSEL, ln, cn);
-	}
-	else if(charCodes[currentChar] != CHAR_TIMES){
-		skipComment();
-		return getToken();
-	}
-	else{
-		readChar();
-		return makeToken(SB_LPAR, ln, cn);
-	}
-}
-
 Token* getToken(void) {
   Token *token;
   int ln, cn;
@@ -267,6 +249,9 @@ Token* getToken(void) {
 	case CHAR_SEMICOLON:
 	return readBasicChar(SB_SEMICOLON);
 
+	case CHAR_COMMA:
+	return readBasicChar(SB_COMMA);
+
 	case CHAR_PERIOD: 
 	return readPeriod();
 
@@ -282,12 +267,34 @@ Token* getToken(void) {
 	case CHAR_EXCLAIMATION:
 	return readExclaimation();
 
+
+
 	case CHAR_LPAR:
-	return readLPAR();
+
+	ln = lineNo;
+	cn = colNo;
+
+	readChar();
+
+	if(charCodes[currentChar] == CHAR_PERIOD){
+		readChar();
+		return makeToken(SB_LSEL, ln, cn);
+	}
+	else if(charCodes[currentChar] == CHAR_TIMES){
+		skipComment();
+		return getToken();
+	}
+	else{
+		return makeToken(SB_LPAR, ln, cn);
+	}
+
+	case CHAR_RPAR:
+	ln = lineNo;
+	cn = colNo;
+	readChar();
+	return makeToken(SB_RPAR, ln, cn);
 
   case CHAR_SINGLEQUOTE: return readConstChar();
-
-
 
   default:
     token = makeToken(TK_NONE, lineNo, colNo);
