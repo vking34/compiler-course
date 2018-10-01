@@ -13,7 +13,8 @@ typedef enum {
   ERR_NUMBERTOOLONG,
   ERR_INVALIDCHARCONSTANT,
   ERR_INVALIDSYMBOL,
-  ERR_STRINGTOOLONG
+  ERR_STRINGTOOLONG,
+  ERR_SINGLEQUOTE
 } ErrorCode;
 
 
@@ -23,6 +24,7 @@ typedef enum {
 #define ERM_INVALIDSYMBOL "Invalid symbol!"
 #define ERM_NUMBERTOOLONG "Number too long"
 #define ERM_STRINGTOOLONG "String too long"
+#define ERM_SINGLEQUOTE "Singlequote can't stand here alone, try \'\'"
 
 void error(ErrorCode err, int lineNo, int colNo);
 

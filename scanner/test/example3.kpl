@@ -21,11 +21,11 @@ BEGIN
 END;  (*END OF HANOI*)
 
 BEGIN
-  FOR  N := 1  TO  4  DO  
+  FOR  N := 1  TO  34  DO  
     BEGIN
       FOR  I:=1  TO  4  DO  
         CALL  WRITEC(' ');
-      CALL WRITEC("vking34");
+      CALL WRITEC("vking''34");
       CALL  READC(C);  
       CALL  WRITEC(C)
     END;

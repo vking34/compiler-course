@@ -66,7 +66,7 @@ Token* readIdentKeyword(void) {
 	token->colNo = colNo;
 	token->tokenType = TK_IDENT;
 
-	while(99){
+	while(1){
 		readChar();
 		if(i >= 15){
 				token->tokenType = TK_NONE;
@@ -80,7 +80,6 @@ Token* readIdentKeyword(void) {
 			token->string[i] = currentChar;
 			i++;
 			break;
-			
 
 			default:
 			if(token->tokenType != TK_IDENT)
@@ -127,17 +126,32 @@ Token* readConstChar(void) {
   token->colNo = colNo;
   token->tokenType = TK_CHAR;
   if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
-  	 token->string[0] = currentChar;
+	  token->string[0] = currentChar;
+	  readChar();
+	  if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
+		  token->tokenType = TK_NONE;
+	  }
+	  else{
+		readChar();
+	  }
   }
   else{
-  	return token;
+	  readChar();
+	  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+		  readChar();
+
+		  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+			  token->string[0] = '\'';
+			  readChar();
+		  }
+		  else{
+			  token->tokenType = TK_NONE;
+		  }
+	  }
+	  else{
+		  token->tokenType = TK_NONE;
+	  }
   }
-  readChar();
-  if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
-  	token->tokenType = TK_NONE;
-  	error(ERR_INVALIDCHARCONSTANT, token->lineNo, token->colNo);
-  }
-  readChar();
   return token;
 }
 
@@ -236,22 +250,39 @@ Token* readConstString(){
 
 	readChar();
 	while(1){
+		// printf("%c - %d\n", currentChar, i);
 		if(charCodes[currentChar] == CHAR_DOUBLEQUOTE){
 			if(i >= 254){
 				token->tokenType = TK_NONE;
-				error(token->lineNo, token->colNo, ERR_STRINGTOOLONG);
+				error(ERR_STRINGTOOLONG, token->lineNo, token->colNo);
 			}
+			token->string[i] = '\0';
 			readChar();
 			return token;
 		}
-
+		else if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+			int ln, cn;
+			ln = lineNo;
+			cn = colNo;
+			readChar();
+			if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
+				token->tokenType = TK_NONE;
+				error(ERR_SINGLEQUOTE, ln, cn);
+				return token;
+			}
+			else{
+				
+				token->string[i] = '\'';
+				i++;
+				readChar();
+				continue;
+			}
+		}
+		
 		token->string[i] = currentChar;
 		i++;
 		readChar();
 	}
-
-
-
 }
 
 Token* getToken(void) {
@@ -355,7 +386,7 @@ void printToken(Token *token) {
   case TK_NUMBER: printf("TK_NUMBER(%s)\n", token->string); break;
   case TK_CHAR: printf("TK_CHAR(\'%s\')\n", token->string); break;
   case TK_EOF: printf("TK_EOF\n"); break;
-  case TK_STRING: printf("TK_STRING(\'%s\')\n", token->string); break;
+  case TK_STRING: printf("TK_STRING(\"%s\")\n", token->string); break;
 
   case KW_PROGRAM: printf("KW_PROGRAM\n"); break;
   case KW_CONST: printf("KW_CONST\n"); break;

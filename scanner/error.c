@@ -28,6 +28,9 @@ void error(ErrorCode err, int lineNo, int colNo) {
   case ERR_STRINGTOOLONG:
     printf("%d-%d:%s\n", lineNo, colNo, ERM_STRINGTOOLONG);
     break;
+  case ERR_SINGLEQUOTE:
+    printf("%d-%d:%s\n", lineNo, colNo, ERM_SINGLEQUOTE);
+    break;
   }
 
   // exit(-1);
