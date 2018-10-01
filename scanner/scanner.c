@@ -67,24 +67,31 @@ Token* readIdentKeyword(void) {
 	token->tokenType = TK_IDENT;
 
 	while(1){
+		// printf("%c\n", currentChar);
 		readChar();
-		if(i >= 15){
+		if(i == 15){
 				token->tokenType = TK_NONE;
 				error(ERR_IDENTTOOLONG, token->lineNo, token->colNo);
-				return makeToken(TK_NONE, lineNo, colNo);
+				// return makeToken(TK_NONE, lineNo, colNo);
 		}
 		switch(charCodes[currentChar]){
-			case CHAR_UNDERSCORE:
 			case CHAR_DIGIT:
 			case CHAR_LETTER:
-			token->string[i] = currentChar;
-			i++;
+			if(token->tokenType != TK_NONE){
+				token->string[i] = currentChar;
+				i++;
+			}
+			else{
+				i++;
+			}
 			break;
-
+			case CHAR_UNDERSCORE:
+			return token;
 			default:
-			if(token->tokenType != TK_IDENT)
+			if(token->tokenType != TK_NONE){
 				token->tokenType = checkKeyword(token->string);
-			// token->tokenType = token->tokenType == TK_NONE ? TK_IDENT : token->tokenType;
+			}
+			token->tokenType = token->tokenType == TK_NONE ? TK_IDENT : token->tokenType;
 			return token;
 		}
 	}
@@ -125,33 +132,63 @@ Token* readConstChar(void) {
   token->lineNo = lineNo;
   token->colNo = colNo;
   token->tokenType = TK_CHAR;
-  if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
-	  token->string[0] = currentChar;
-	  readChar();
+//   if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
+// 	  token->string[0] = currentChar;
+// 	  readChar();
+// 	  if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
+// 		  token->tokenType = TK_NONE;
+// 	  }
+// 	  else{
+// 		readChar();
+// 	  }
+//   }
+//   else{
+// 	  readChar();
+// 	  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+// 		  readChar();
+
+// 		  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+// 			  token->string[0] = '\'';
+// 			  readChar();
+// 		  }
+// 		  else{
+// 			  token->tokenType = TK_NONE;
+// 		  }
+// 	  }
+// 	  else{
+// 		  token->tokenType = TK_NONE;
+// 	  }
+//   }
+
+	if(charCodes[currentChar] != CHAR_BACKSLASH){
+		token->string[0] = currentChar;
+		readChar();
 	  if(charCodes[currentChar] != CHAR_SINGLEQUOTE){
 		  token->tokenType = TK_NONE;
 	  }
 	  else{
 		readChar();
 	  }
-  }
-  else{
-	  readChar();
-	  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
+	}
+	else{
+		readChar();
+	  if(charCodes[currentChar] == CHAR_BACKSLASH || charCodes[currentChar] == CHAR_SINGLEQUOTE || charCodes[currentChar] == CHAR_DOUBLEQUOTE){
+		  token->string[0] = currentChar;
 		  readChar();
-
 		  if(charCodes[currentChar] == CHAR_SINGLEQUOTE){
-			  token->string[0] = '\'';
+			//   token->string[0] = '\"";
 			  readChar();
 		  }
 		  else{
+			  error(ERR_INVALIDSYMBOL, token->lineNo, token->colNo);
 			  token->tokenType = TK_NONE;
 		  }
 	  }
 	  else{
 		  token->tokenType = TK_NONE;
 	  }
-  }
+	}
+	token->string[1] = '\0';
   return token;
 }
 
@@ -364,6 +401,8 @@ Token* getToken(void) {
   case CHAR_SINGLEQUOTE: return readConstChar();
 
   case CHAR_DOUBLEQUOTE: return readConstString();
+
+  case CHAR_UNDERSCORE: return readIdentKeyword();
 
   default:
     token = makeToken(TK_NONE, lineNo, colNo);

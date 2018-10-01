@@ -1,10 +1,10 @@
 Program Example2; (* Factorial *)
    
-Var n : Integer;
+var _ : integer;
 
-Function F(n : Integer) : Integer;
+Function F(n : Integer) : integer;
   Begin
-    If n = 0 Then F := 1 Else F := N * F (N - 1);
+    If nsadasdasdasdasdsadasd = 0 Then F := 1 Else F := N * F (N - 1);
   End;
 
 Begin

@@ -28,6 +28,7 @@ typedef enum {
   CHAR_RPAR,
   CHAR_UNDERSCORE,
   CHAR_DOUBLEQUOTE,
+  CHAR_BACKSLASH,
   CHAR_UNKNOWN
 } CharCode;
 
