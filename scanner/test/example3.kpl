@@ -1,5 +1,5 @@
 PROGRAM  EXAMPLE3;  (* TOWER OF HANOI *)
-VAR  I_3:INTEGER;  
+VAR  I:INTEGER;  
      N:INTEGER;  
      P:INTEGER;  
      Q:INTEGER;
@@ -7,7 +7,7 @@ VAR  I_3:INTEGER;
 
 PROCEDURE  HANOI(N:INTEGER;  S:INTEGER;  Z:INTEGER);
 BEGIN
-  IF  N >< 0  THEN
+  IF  N != 0  THEN
     BEGIN
       CALL  HANOI(N-1,S,6-S-Z);
       I:=I+1;  
@@ -21,11 +21,10 @@ BEGIN
 END;  (*END OF HANOI*)
 
 BEGIN
-  FOR  N := 1  TO  34  DO  
+  FOR  N := 1  TO  4  DO  
     BEGIN
       FOR  I:=1  TO  4  DO  
-        CALL  WRITEC('\"');
-      CALL WRITEC("vking''34");
+        CALL  WRITEC(' ');
       CALL  READC(C);  
       CALL  WRITEC(C)
     END;
