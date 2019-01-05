@@ -91,10 +91,17 @@ void compileConstDecl(void) {
 
 void compileTypeDecls(void) {
   // TODO
+  while(lookAhead->tokenType == TK_IDENT){
+    compileTypeDecl();
+  }
 }
 
 void compileTypeDecl(void) {
   // TODO
+  eat(TK_IDENT);
+  eat(SB_EQ);
+  compileType();
+  eat(SB_SEMICOLON);
 }
 
 void compileVarDecls(void) {
@@ -114,6 +121,14 @@ void compileSubDecls(void) {
 void compileFuncDecl(void) {
   assert("Parsing a function ....");
   // TODO
+  eat(KW_FUNCTION);
+  eat(TK_IDENT);
+  compileParams();
+  eat(SB_COLON);
+  compileBasicType();
+  eat(SB_SEMICOLON);
+  compileBlock();
+  eat(SB_SEMICOLON);
   assert("Function parsed ....");
 }
 
