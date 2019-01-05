@@ -282,7 +282,7 @@ Type* compileType(void) {
   switch (lookAhead->tokenType) {
   case KW_INTEGER: 
     eat(KW_INTEGER);
-    type =  makeIntType();
+    type = makeIntType();
     break;
   case KW_CHAR: 
     eat(KW_CHAR); 
@@ -421,7 +421,6 @@ Type* compileLValue(void) {
 
   eat(TK_IDENT);
   // check if the identifier is a function identifier, or a variable identifier, or a parameter  
-  
 
   var = checkDeclaredLValueIdent(currentToken->string);
   switch (var->kind) {
@@ -460,9 +459,10 @@ void compileAssignSt(void) {
   Type* expType;
 
   varType = compileLValue();
-  
+  checkBasicType(varType);
   eat(SB_ASSIGN);
   expType = compileExpression();
+  checkBasicType(expType);
   checkTypeEquality(varType, expType);
 }
 
@@ -511,13 +511,15 @@ void compileForSt(void) {
 
   eat(KW_FOR);
   varType = compileLValue();
-
+  checkBasicType(varType);
   eat(SB_ASSIGN);
   type = compileExpression();
+  checkBasicType(type);
   checkTypeEquality(varType, type);
 
   eat(KW_TO);
   type = compileExpression();
+  checkBasicType(type);
   checkTypeEquality(varType, type);
 
   eat(KW_DO);

@@ -58,12 +58,15 @@ int compareType(Type* type1, Type* type2) {
   if (type1->typeClass == type2->typeClass) {
     if (type1->typeClass == TP_ARRAY) {
       if(type1->arrDimensions == type2->arrDimensions){
-        if (type1->arraySize == type2->arraySize)
+        if (type1->arraySize == type2->arraySize){
 	        return compareType(type1->elementType, type2->elementType);
-        else return 0;
+        }
+        return 0;
       }
-    } else return 1;
-  } else return 0;
+    }
+    return 1;
+  }
+  return 0;
 }
 
 void freeType(Type* type) {
