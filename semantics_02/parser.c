@@ -272,12 +272,14 @@ ConstantValue* compileConstant2(void) {
   case TK_IDENT:
     eat(TK_IDENT);
     // TODO: check if the integer constant identifier is declared and get its value
-    printf("%d\n", MAX_IDENT_LEN);
     obj = lookupObject(currentToken->string);
-    ConstantAttributes* temp = obj->constAttrs;
-    if(temp != NULL){
-      constValue = duplicateConstantValue(temp->value);
+    if(obj != NULL && obj->constAttrs != NULL){
+      constValue = duplicateConstantValue(obj->constAttrs->value);
     }
+    else {
+      error(ERR_UNDECLARED_TYPE,currentToken->lineNo, currentToken->colNo);
+    }
+
     break;
   default:
     error(ERR_INVALID_CONSTANT, lookAhead->lineNo, lookAhead->colNo);
@@ -319,7 +321,10 @@ Type* compileType(void) {
     // TODO: check if the type idntifier is declared and get its actual type
     obj = lookupObject(currentToken->string);
     if(obj != NULL && obj->typeAttrs != NULL){
-      type = obj->typeAttrs->actualType;
+      type = duplicateType(obj->typeAttrs->actualType);
+    }
+    else {
+      error(ERR_UNDECLARED_TYPE,currentToken->lineNo, currentToken->colNo);
     }
     break;
   default:
@@ -382,6 +387,9 @@ void compileParam(void) {
 
   eat(TK_IDENT);
   // TODO: check if the parameter identifier is fresh in the block
+  if (findObject(symtab->currentScope->objList, currentToken->string) != NULL)
+    error(ERR_DUPLICATE_IDENT, currentToken->lineNo, currentToken->colNo);
+
   param = createParameterObject(currentToken->string, paramKind, symtab->currentScope->owner);
   eat(SB_COLON);
   type = compileBasicType();
