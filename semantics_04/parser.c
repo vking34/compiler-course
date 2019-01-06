@@ -555,7 +555,7 @@ void compileArguments(ObjectNode* paramList) {
     while (lookAhead->tokenType == SB_COMMA) {
       eat(SB_COMMA);
       if (node == NULL)
-  error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+        error(ERR_PARAMETERS_ARGUMENTS_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
       compileArgument(node->object);
       node = node->next;
     }
@@ -658,7 +658,7 @@ Type* compileExpression2(void) {
 
 void compileExpression3(void) {
   Type* type;
-
+  // assert("3");
   switch (lookAhead->tokenType) {
   case SB_PLUS:
     eat(SB_PLUS);

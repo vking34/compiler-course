@@ -27,6 +27,6 @@ Program Example6;
      end;
 
 Begin
-     v2 := 5;
+     
      call p(c1);
 End.

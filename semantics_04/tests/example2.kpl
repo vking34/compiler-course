@@ -1,5 +1,6 @@
 Program Example2; (* Factorial *)
-   
+Const c1 = 2;
+Type t = c1;
 Var n : Integer;
 
 Function F(n : Integer) : Integer;

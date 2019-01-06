@@ -16,21 +16,17 @@ END;
 
 PROCEDURE OUTPUT;
 VAR I : INTEGER;
-    OUTPUT: INTEGER;
 BEGIN
   FOR I := 1 TO N DO
      BEGIN
-        OUTPUT := 1; 
        CALL WRITEI(A(.I.));
        CALL WRITELN;
-       
      END
 END;
 
 FUNCTION SUM : INTEGER;
 VAR I: INTEGER;
     S : INTEGER;
-    SUM : CHAR;
 BEGIN
     S := 0;
     I := 1;
@@ -38,7 +34,6 @@ BEGIN
      BEGIN
        S := S + A(.I.);
        I := I + 1;
-      SUM := 'c';
      END
 END;
 
@@ -47,7 +42,7 @@ BEGIN
    WHILE CH = 'y' DO
      BEGIN
        CALL INPUT;
-       CALL OUTPUT;
+       CALL OUTPUT(SUM);
        CALL WRITEI(SUM);
        CH := READC;
      END
