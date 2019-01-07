@@ -114,7 +114,9 @@ void compileBlock3(void) {
 
     do {
       eat(TK_IDENT);
-      
+      if(!strcmp(symtab->currentScope->owner->name, currentToken->string)){
+        error(ERR_INVALID_IDENT, currentToken->lineNo, currentToken->colNo);
+      }
       checkFreshIdent(currentToken->string);
       varObj = createVariableObject(currentToken->string);
 
@@ -189,6 +191,7 @@ void compileProcDecl(void) {
 
   enterBlock(procObj->procAttrs->scope);
 
+  
   compileParams();
 
   eat(SB_SEMICOLON);
@@ -354,6 +357,7 @@ void compileParam(void) {
 
   switch (lookAhead->tokenType) {
   case TK_IDENT:
+
     paramKind = PARAM_VALUE;
     break;
   case KW_VAR:
@@ -366,6 +370,9 @@ void compileParam(void) {
   }
 
   eat(TK_IDENT);
+  if(symtab->currentScope->owner->kind == OBJ_FUNCTION && !strcmp(symtab->currentScope->owner->name, currentToken->string)){
+    error(ERR_INVALID_IDENT, currentToken->lineNo, currentToken->colNo);
+  }
   checkFreshIdent(currentToken->string);
   param = createParameterObject(currentToken->string, paramKind, symtab->currentScope->owner);
   eat(SB_COLON);

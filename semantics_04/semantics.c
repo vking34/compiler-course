@@ -29,12 +29,14 @@ Object* lookupObject(char *name) {
 }
 
 void checkFreshIdent(char *name) {
+  
   if (findObject(symtab->currentScope->objList, name) != NULL)
     error(ERR_DUPLICATE_IDENT, currentToken->lineNo, currentToken->colNo);
 }
 
 Object* checkDeclaredIdent(char* name) {
   Object* obj = lookupObject(name);
+  
   if (obj == NULL) {
     error(ERR_UNDECLARED_IDENT,currentToken->lineNo, currentToken->colNo);
   }
@@ -63,6 +65,9 @@ Object* checkDeclaredType(char* name) {
 
 Object* checkDeclaredVariable(char* name) {
   Object* obj = lookupObject(name);
+  if(strcmp(symtab->currentScope->owner->name, name)){
+    error(ERR_INVALID_VARIABLE, currentToken->lineNo, currentToken->colNo);
+  }
   if (obj == NULL)
     error(ERR_UNDECLARED_VARIABLE,currentToken->lineNo, currentToken->colNo);
   else if (obj->kind != OBJ_VARIABLE)

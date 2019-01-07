@@ -42,7 +42,7 @@ BEGIN
    WHILE CH = 'y' DO
      BEGIN
        CALL INPUT;
-       CALL OUTPUT(SUM);
+       CALL OUTPUT;
        CALL WRITEI(SUM);
        CH := READC;
      END
