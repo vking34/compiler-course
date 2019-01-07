@@ -37,6 +37,27 @@ BEGIN
      END
 END;
 
+PROCEDURE SORT;
+VAR I: INTEGER;
+  J: INTEGER;
+  TEMP : INTEGER;
+BEGIN
+  FOR I := 0 TO (N - 1) DO
+    BEGIN
+      FOR J := 0 TO (N - I - 1) DO
+        BEGIN
+          IF A(.J.) > A(.J+1.) THEN
+            BEGIN
+              TEMP = A(.J.);
+              A(.J.) := A(.J+1.);
+              A(.J+1.) := TEMP;
+            END
+          J := J + 1;
+        END
+      I := I + 1;
+    END
+END;
+
 BEGIN
    CH := 'y';
    WHILE CH = 'y' DO
