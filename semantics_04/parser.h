@@ -35,6 +35,8 @@ void compileParams(void);
 void compileParam(void);
 void compileStatements(void);
 void compileStatement(void);
+Object* getLValueObject(void);
+Type* getTypeFromObj(Object* obj);
 Type* compileLValue(void);
 void compileAssignSt(void);
 void compileCallSt(void);

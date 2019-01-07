@@ -414,6 +414,30 @@ void compileStatement(void) {
   }
 }
 
+Type* getTypeFromObj(Object* obj){
+  Type* varType;
+
+  switch(obj->kind){
+    case OBJ_VARIABLE:
+      if (obj->varAttrs->type->typeClass == TP_ARRAY) {
+        varType = compileIndexes(obj->varAttrs->type);
+      }
+      else
+        varType = obj->varAttrs->type;
+      break;
+    case OBJ_PARAMETER:
+      varType = obj->paramAttrs->type;
+      break;
+    case OBJ_FUNCTION:
+      varType = obj->funcAttrs->returnType;
+      break;
+    default: 
+      error(ERR_INVALID_LVALUE,currentToken->lineNo, currentToken->colNo);
+  }
+
+  return varType;
+}
+
 Type* compileLValue(void) {
   // TODO: parse a lvalue (a variable, an array element, a parameter, the current function identifier)
   Object* var;
@@ -535,7 +559,14 @@ void compileArgument(Object* param) {
     type = compileExpression();
     checkTypeEquality(type, param->paramAttrs->type);
   } else {
-    type = compileLValue();
+    // type = compileLValue();
+    // checkTypeEquality(type, param->paramAttrs->type);
+    eat(TK_IDENT);
+    Object* obj = checkDeclaredIdent(currentToken->string);
+    if(obj->kind != OBJ_VARIABLE){
+      error(ERR_INVALID_ARGUMENTS, currentToken->lineNo, currentToken->colNo);
+    }
+    type = getTypeFromObj(obj);
     checkTypeEquality(type, param->paramAttrs->type);
   }
 }

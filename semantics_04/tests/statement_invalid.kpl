@@ -12,6 +12,7 @@ Begin
     Begin
       Call WriteLn;
       Call WriteI( F(n));
+      to;
     End;
   To;
 End. (* Factorial *)
