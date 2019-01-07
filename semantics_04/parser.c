@@ -370,7 +370,8 @@ void compileParam(void) {
   }
 
   eat(TK_IDENT);
-  if(symtab->currentScope->owner->kind == OBJ_FUNCTION && !strcmp(symtab->currentScope->owner->name, currentToken->string)){
+  if(symtab->currentScope->owner->kind == OBJ_FUNCTION 
+  && !strcmp(symtab->currentScope->owner->name, currentToken->string)){
     error(ERR_INVALID_IDENT, currentToken->lineNo, currentToken->colNo);
   }
   checkFreshIdent(currentToken->string);
