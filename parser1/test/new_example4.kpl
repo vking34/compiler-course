@@ -1,0 +1,72 @@
+PROGRAM  EXAMPLE4;  (* Example 4 *)
+CONST MAX = 10;
+TYPE T = INTEGER;
+VAR  A : ARRAY(. 10 .) OF T;
+     N : INTEGER;
+     CH : CHAR;
+
+PROCEDURE INPUT;
+VAR I : INTEGER;
+    TMP : INTEGER;
+BEGIN
+  N := READI;
+  FOR I := 1 TO N DO
+     A(.I.) := READI;
+END;
+
+PROCEDURE OUTPUT;
+VAR I : INTEGER;
+BEGIN
+  FOR I := 1 TO N DO
+     BEGIN
+       CALL WRITEI(A(.I.));
+       CALL WRITELN;
+     END
+END;
+
+FUNCTION SUM : INTEGER;
+VAR I: INTEGER;
+    S : INTEGER;
+BEGIN
+    S := 0;
+    I := 1;
+    WHILE I <= N DO
+     BEGIN
+       S := S + A(.I.);
+       I := I + 1;
+     END
+END;
+
+(* Bubble Sort in ASC order*)
+PROCEDURE SORT;
+VAR X: INTEGER;
+    Y: INTEGER;
+    TEMP : INTEGER;
+BEGIN
+  FOR X := 0 TO (N - 1) DO
+    BEGIN
+      FOR Y := 0 TO (N - X - 1) DO
+        BEGIN
+          IF A(.Y.) > A(.Y+1.) THEN
+            BEGIN
+              TEMP := A(.Y.);
+              A(.Y.) := A(.Y+1.);
+              A(.X+1.) := TEMP
+            END
+          Y := Y + 1
+        END
+      X := X + 1
+    END
+END;
+
+BEGIN
+   CH := 'y';
+   WHILE CH = 'y' DO
+     BEGIN
+       CALL INPUT;
+       CALL OUTPUT;
+       CALL SORT;
+       CALL WRITEI(SUM);
+       CH := READC;
+     END
+END.  (* Example 4 *)
