@@ -1,0 +1,16 @@
+(* check invalid lvalue *)
+Program error3;
+   Const c1 = 2;
+   Type t1 = array(. 10 .) of integer;
+   Var v1 : Integer; v2: Integer;
+
+   Function f(p1 : Integer; Var p2 : char) : Integer;
+     Begin
+       f := p1;
+     End;
+
+Begin
+     call Writeln;
+     for v1 := 3 to 3+2 do
+         f := v1;
+End.

@@ -1,0 +1,16 @@
+(* check invalid variable *)
+Program error3;
+   Const c1 = 2;
+   Type t1 = array(. 10 .) of integer;
+   Var v1 : Integer; v2: Integer;
+
+   Function f(p1 : Integer; Var p2 : char) : Integer;
+     Begin
+       f := p1;
+     End;
+
+Begin
+     v1 := f(c1, 'a') + c1;
+     for c1 := 3 to 3+2 do
+         v2 := 1;
+End.

@@ -1,0 +1,14 @@
+(* check undeclared constant *)
+Program error3;
+   Const c1 = c2;
+   Type t1 = array(. 10 .) of integer;
+   Var v1 : Integer;
+
+   Function f(p1 : Integer; Var p2 : char) : Integer;
+     Begin
+       f := p1;
+     End;
+
+Begin
+     v1 := f(c1, 'a') + c1;
+End.

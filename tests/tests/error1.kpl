@@ -1,0 +1,14 @@
+(* check duplicate declaration *)
+Program error1;
+   Const c1 = 10;
+   Type t1 = array(. 10 .) of integer;
+   Var v1 : Integer;
+
+   Function t1(p1 : Integer; Var p2 : char) : Integer;
+     Begin
+       t1 := c1;
+     End;
+
+Begin
+     v1 = 2;
+End.
